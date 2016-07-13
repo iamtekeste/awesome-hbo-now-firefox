@@ -7,24 +7,24 @@ var AHN = {
   assetSelector: '.now-thumbnail',
   assetOverlaySelector: '.now-thumbnail-overlay',
   omdbApi: 'https://www.omdbapi.com/?plot=short&r=json&t=',
-  init: function() {
+  init: function () {
     this.extractAssetData();
   },
-  extractAssetData: function() {
+  extractAssetData: function () {
     var assetContainers = document.querySelectorAll(this.assetSelector);
-    [].forEach.call(assetContainers, (el) => {
+    [].forEach.call(assetContainers, el => {
 
       //let's get all the data attributes on el, specifically data-asset
       var assetData = JSON.parse(el.dataset.asset);
 
       /*
       * Sometimes HBO does not give us all the info we need in that case
-      * we will get the it from OMDB api. For example HBO does not give as series synopsis
+      * we will get it from OMDB api. For example HBO does not give us series synopsis
       * on "/series"
       */
-      if(assetData.description === undefined || window.location.pathname === "/series") {
-        this.makeApiRequest(assetData.title, (data) => {
-          if(data.Plot != undefined) {
+      if (assetData.description === undefined || window.location.pathname === "/series") {
+        this.makeApiRequest(assetData.title, data => {
+          if (data.Plot != undefined) {
             assetData.description = data.Plot;
             //ahnInfoNode is the overlay node that will display the data
             var ahnInfoNode = this.createAHNInfo(assetData);
@@ -37,44 +37,43 @@ var AHN = {
       * But if we have all the data we need we will go ahead and build the info node
       */
       else {
-        //ahnInfoNode is the overlay node that will display the data
-        var ahnInfoNode = this.createAHNInfo(assetData);
-        //we are appending it to the parent node's overlay, the overlay shows on mouse hover
-        this.appendToOverlay(ahnInfoNode, el);
-      }
-
+          //ahnInfoNode is the overlay node that will display the data
+          var ahnInfoNode = this.createAHNInfo(assetData);
+          //we are appending it to the parent node's overlay, the overlay shows on mouse hover
+          this.appendToOverlay(ahnInfoNode, el);
+        }
     });
   },
-  appendToOverlay: function(ahnInfoNode, el) {
+  appendToOverlay: function (ahnInfoNode, el) {
     el.appendChild(ahnInfoNode);
   },
-  createAHNInfo: function(assetData) {
-   let ahnInfoHTML = `<div class="ahn-info" data-year="${assetData.releaseDate}">
+  createAHNInfo: function (assetData) {
+    let ahnInfoHTML = `<div class="ahn-info" data-year="${ assetData.releaseDate }">
       <p class="plot">
-        ${assetData.description}
+        ${ assetData.description }
       </p>
       <span class="ahn-rating">
         <span>Rating: </span>
-        ${assetData.rating}
+        ${ assetData.rating }
     </div> `;
     let ahnInfoNode = document.createElement('div');
     ahnInfoNode.innerHTML = ahnInfoHTML;
     return ahnInfoNode.firstChild;
   },
-  makeApiRequest: function(title, cb) {
+  makeApiRequest: function (title, cb) {
     var xhr = new XMLHttpRequest();
     var url = this.omdbApi + title;
     xhr.open('GET', url);
     xhr.send();
-    xhr.onload = function() {
-      if(xhr.status === 200) {
+    xhr.onload = function () {
+      if (xhr.status === 200) {
         var data = JSON.parse(xhr.response);
         cb(data);
       }
-    }
+    };
   }
 };
 
-window.onload  = () => {
+window.onload = () => {
   AHN.init();
 };

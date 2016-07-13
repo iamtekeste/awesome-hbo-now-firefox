@@ -3,14 +3,14 @@
   "name": "awesome-hbo-now",
   "version": "0.0.1",
   "scripts": {
-    "build": "babel extension/content.js --watch --out-file extension/bundle.js"
+    "build": "babel data/content.js --watch --out-file data/bundle.js"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",
     "babel-preset-es2015": "^6.6.0"
   },
   "description": "Awesome HBO NOW shows rating and plot for the tv shows and movies",
-  "main": "extension/bundle.js",
+  "main": "data/index.js",
   "author": "Tekeste G.",
   "engines": {
     "firefox": ">=38.0a1",
